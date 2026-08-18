@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geeta - English Learning Dashboard</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f8fafc;
+            margin: 0;
+            padding: 14px;
+        }
+
+        .learning-app {
+            background: #fff;
+            padding: 20px;
+            border-radius: 28px;
+            max-width: 760px;
+            margin: 0 auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        /* ক্যাটাগরি গ্রিড ডিজাইন */
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .category-card {
+            border: 0;
+            color: #ffffff;
+            text-align: left;
+            border-radius: 20px;
+            padding: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .category-icon {
+            font-size: 28px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px;
+            border-radius: 12px;
+        }
+
+        .category-info {
+            flex: 1;
+        }
+
+        .category-number {
+            font-size: 11px;
+            opacity: 0.85;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .category-name {
+            display: block;
+            font-size: 15px;
+            font-weight: 800;
+        }
+
+        .category-description {
+            display: block;
+            font-size: 11px;
+            opacity: .9;
+            margin-top: 4px;
+            line-height: 1.3;
+        }
+
+        /* লার্নিং এরিয়া */
+        .learning-area {
+            text-align: center;
+        }
+
+        .back-button {
+            border: 0;
+            background: #eef2ff;
+            color: #4338ca;
+            border-radius: 10px;
+            padding: 8px 14px;
+            font-weight: bold;
+            cursor: pointer;
+            float: left;
+            margin-bottom: 15px;
+        }
+
+        .display-item {
+            font-size: 45px;
+            font-weight: 900;
+            color: #1e1b4b;
+            margin: 15px 0 5px 0;
+        }
+
+        .sub-desc {
+            font-size: 16px;
+            color: #334155;
+            font-weight: bold;
+        }
+
+        .pronunciation {
+            color: #64748b;
+            font-size: 15px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .progress-status {
+            font-size: 15px;
+            color: #1e293b;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+
+        .input-box {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #cbd5e1;
+            border-radius: 10px;
+            font-size: 16px;
+            text-align: center;
+            margin-bottom: 15px;
+            outline: none;
+        }
+
+        .btn-yellow {
+            background: #eab308;
+            color: #fff;
+        }
+
+        .btn-purple {
+            background: #9333ea;
+            color: #fff;
+        }
+
+        .btn-blue {
+            background: #2563eb;
+            color: #fff;
+        }
+
+        .btn-green {
+            background: #10b981;
+            color: #fff;
+        }
+
+        .btn-gray {
+            background: #e2e8f0;
+            color: #475569;
+        }
+
+        .action-btn {
+            width: 100%;
+            border: 0;
+            border-radius: 10px;
+            padding: 14px;
+            margin-top: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .action-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="learning-app">
+        <!-- ১৪টি ক্যাটাগরি মেনু -->
+        <div id="menuArea" class="category-grid">
+            <script>
+                var categories = [
+                    { name: "বর্ণমালা", desc: "Alphabet", icon: "🔤" },
+                    { name: "২-অক্ষরের শব্দ", desc: "2-Letter words", icon: "📖" },
+                    { name: "ছোট শব্দ", desc: "Cat, Pen", icon: "✍️" },
+                    { name: "গার্মেন্টস", desc: "Needle, Thread", icon: "🧵" },
+                    { name: "রং", desc: "Red, Blue", icon: "🎨" },
+                    { name: "সংখ্যা", desc: "One, Two", icon: "🔢" },
+                    { name: "বারের দিন", desc: "Days of the week", icon: "📅" },
+                    { name: "শরীরের অংশ", desc: "Head, Hand", icon: "👤" },
+                    { name: "পরিবার", desc: "Family members", icon: "👨‍👩‍👧" },
+                    { name: "Tense Practice", desc: "Go-Went, Eat-Ate", icon: "⏱️" },
+                    { name: "Garments Terms", desc: "Zipper, Collar", icon: "🧥" },
+                    { name: "Measurements", desc: "Chest, Waist, Sleeve", icon: "📏" },
+                    { name: "Fabrics & Wash", desc: "Denim, Dirty Wash", icon: "👕" },
+                    { name: "দৈনন্দিন কথা", desc: "Hello, Thank you", icon: "💬" }
+                ];
+
+                var colors = [
+                    "linear-gradient(135deg, #2563eb, #4f46e5)", "linear-gradient(135deg, #059669, #0f766e)",
+                    "linear-gradient(135deg, #ea580c, #dc2626)", "linear-gradient(135deg, #7c3aed, #db2777)",
+                    "linear-gradient(135deg, #db2777, #9333ea)", "linear-gradient(135deg, #ca8a04, #ea580c)",
+                    "linear-gradient(135deg, #0891b2, #2563eb)", "linear-gradient(135deg, #4f46e5, #7c3aed)",
+                    "linear-gradient(135deg, #be123c, #9f1239)", "linear-gradient(135deg, #f43f5e, #e11d48)",
+                    "linear-gradient(135deg, #0ea5e9, #0284c7)", "linear-gradient(135deg, #8b5cf6, #6d28d9)",
+                    "linear-gradient(135deg, #10b981, #059669)", "linear-gradient(135deg, #6366f1, #4338ca)"
+                ];
+
+                for (var i = 0; i < 14; i++) {
+                    document.write(`
+                <a href="javascript:void(0)" class="category-card" style="background:${colors[i]}" onclick="selectCategory('cat${i + 1}')">
+                    <div class="category-icon">${categories[i].icon}</div>
+                    <div class="category-info">
+                        <span class="category-number">ক্যাটাগরি ${i + 1}</span>
+                        <span class="category-name">${categories[i].name}</span>
+                        <span class="category-description">${categories[i].desc}</span>
+                    </div>
+                </a>
+            `);
+                }
+            </script>
+        </div>
+
+        <!-- লার্নিং প্র্যাকটিস স্ক্রিন -->
+        <div id="learningArea" class="learning-area hidden">
+            <button class="back-button" onclick="backToMenu()">&#8592; মেনুতে ফিরে যান</button>
+            <div style="clear: both;"></div>
+
+            <div id="counter" style="font-size: 13px; color: #64748b; font-weight: bold;"></div>
+
+            <h2 class="display-item" id="displayItem"></h2>
+            <div class="sub-desc" id="subDesc"></div>
+            <div class="pronunciation" id="pronunciation"></div>
+
+            <div class="progress-status">
+                লেখা: <span id="writeCount">০</span>/৫ | বলা: <span id="speakCount">০</span>/৫
+            </div>
+
+            <input type="text" id="userInput" class="input-box" placeholder="শব্দটি লিখুন">
+
+            <button class="action-btn btn-yellow" onclick="speakWord()">🔊 সম্পূর্ণ উচ্চারণ শুনুন</button>
+            <button class="action-btn btn-purple" onclick="spellWord()">🔤 বানান করে শুনুন (Spell out)</button>
+            <button class="action-btn btn-blue" onclick="verifyWriting()">✍️ লিখে যাচাই করুন</button>
+            <button class="action-btn btn-green" onclick="verifyVoice()">🎤 উচ্চারণ করে যাচাই করুন</button>
+
+            <button class="action-btn btn-gray" id="nextBtn" onclick="nextItem()" disabled
+                style="margin-top: 15px;">পরের শব্দে যান</button>
+
+            <div id="statusMsg" style="margin-top: 10px; font-size: 13px; font-weight: bold; color: #475569;"></div>
+        </div>
+    </div>
+
+    <script>
+        /* ১৪টি ক্যাটাগরির প্রতিটিতে ৫০টি করে আইটেম */
+        var learningData = {
+            cat1: [
+                { text: 'A', sub: 'Alphabet', pro: 'উচ্চারণ: এ' }, { text: 'B', sub: 'Alphabet', pro: 'উচ্চারণ: বি' },
+                { text: 'C', sub: 'Alphabet', pro: 'উচ্চারণ: সি' }, { text: 'D', sub: 'Alphabet', pro: 'উচ্চারণ: ডি' },
+                { text: 'E', sub: 'Alphabet', pro: 'উচ্চারণ: ই' }, { text: 'F', sub: 'Alphabet', pro: 'উচ্চারণ: এফ' },
+                { text: 'G', sub: 'Alphabet', pro: 'উচ্চারণ: জি' }, { text: 'H', sub: 'Alphabet', pro: 'উচ্চারণ: এই্চ' },
+                { text: 'I', sub: 'Alphabet', pro: 'উচ্চারণ: আই' }, { text: 'J', sub: 'Alphabet', pro: 'উচ্চারণ: জে' },
+                { text: 'K', sub: 'Alphabet', pro: 'উচ্চারণ: কে' }, { text: 'L', sub: 'Alphabet', pro: 'উচ্চারণ: এল' },
+                { text: 'M', sub: 'Alphabet', pro: 'উচ্চারণ: এম' }, { text: 'N', sub: 'Alphabet', pro: 'উচ্চারণ: এন' },
+                { text: 'O', sub: 'Alphabet', pro: 'উচ্চারণ: ও' }, { text: 'P', sub: 'Alphabet', pro: 'উচ্চারণ: পি' },
+                { text: 'Q', sub: 'Alphabet', pro: 'উচ্চারণ: কিউ' }, { text: 'R', sub: 'Alphabet', pro: 'উচ্চারণ: আর' },
+                { text: 'S', sub: 'Alphabet', pro: 'উচ্চারণ: এস' }, { text: 'T', sub: 'Alphabet', pro: 'উচ্চারণ: টি' },
+                { text: 'U', sub: 'Alphabet', pro: 'উচ্চারণ: ইউ' }, { text: 'V', sub: 'Alphabet', pro: 'উচ্চারণ: ভি' },
+                { text: 'W', sub: 'Alphabet', pro: 'উচ্চারণ: ডাব্লিউ' }, { text: 'X', sub: 'Alphabet', pro: 'উচ্চারণ: এক্স' },
+                { text: 'Y', sub: 'Alphabet', pro: 'উচ্চারণ: ওয়াই' }, { text: 'Z', sub: 'Alphabet', pro: 'উচ্চারণ: জেড' },
+                { text: 'a', sub: 'Small Letter', pro: 'উচ্চারণ: স্মল এ' }, { text: 'b', sub: 'Small Letter', pro: 'উচ্চারণ: স্মল বি' },
+                { text: 'c', sub: 'Small Letter', pro: 'উচ্চারণ: স্মল সি' }, { text: 'd', sub: 'Small Letter', pro: 'উচ্চারণ: স্মল ডি' },
+                { text: 'e', sub: 'Small Letter', pro: 'উচ্চারণ: স্মল ই' }, { text: 'f', sub: 'Small Letter', pro: 'উচ্চারণ: স্মল এফ' },
+                { text: 'g', sub: 'Small Letter', pro: 'উচ্চারণ: স্মল জি' }, { text: 'h', sub: 'Small Letter', pro: 'উচ্চারণ: স্মল এইচ' },
+                { text: 'i', sub: 'Small Letter', pro: 'উচ্চারণ: স্মল আই' }, { text: 'j', sub: 'Small Letter', pro: 'উচ্চারণ: স্মল জে' },
+                { text: 'k', sub: 'Small Letter', pro: 'উচ্চারণ: স্মল কে' }, { text: 'l', sub: 'Small Letter', pro: 'উচ্চারণ: স্মল এল' },
+                { text: 'm', sub: 'Small Letter', pro: 'উচ্চারণ: স্মল এম' }, { text: 'n', sub: 'Small Letter', pro: 'উচ্চারণ: স্মল এন' },
+                { text: 'o', sub: 'Small Letter', pro: 'উচ্চারণ: স্মল ও' }, { text: 'p', sub: 'Small Letter', pro: 'উচ্চারণ: স্মল পি' },
+                { text: 'q', sub: 'Small Letter', pro: 'উচ্চারণ: স্মল কিউ' }, { text: 'r', sub: 'Small Letter', pro: 'উচ্চারণ: স্মল আর' },
+                { text: 's', sub: 'Small Letter', pro: 'উচ্চারণ: স্মল এস' }, { text: 't', sub: 'Small Letter', pro: 'উচ্চারণ: স্মল টি' },
+                { text: 'u', sub: 'Small Letter', pro: 'উচ্চারণ: স্মল ইউ' }, { text: 'v', sub: 'Small Letter', pro: 'উচ্চারণ: স্মল ভি' },
+                { text: 'w', sub: 'Small Letter', pro: 'উচ্চারণ: স্মল ডাব্লিউ' }, { text: 'x', sub: 'Small Letter', pro: 'উচ্চারণ: স্মল এক্স' }
+            ],
+            cat2: [
+                { text: 'At', sub: '2-Letter word', pro: 'উচ্চারণ: অ্যাট' }, { text: 'In', sub: '2-Letter word', pro: 'উচ্চারণ: ইন' },
+                { text: 'On', sub: '2-Letter word', pro: 'উচ্চারণ: অন' }, { text: 'Do', sub: '2-Letter word', pro: 'উচ্চারণ: ডু' },
+                { text: 'Go', sub: '2-Letter word', pro: 'উচ্চারণ: গো' }, { text: 'No', sub: '2-Letter word', pro: 'উচ্চারণ: নো' },
+                { text: 'So', sub: '2-Letter word', pro: 'উচ্চারণ: সো' }, { text: 'He', sub: '2-Letter word', pro: 'উচ্চারণ: হি' },
+                { text: 'Me', sub: '2-Letter word', pro: 'উচ্চারণ: মি' }, { text: 'We', sub: '2-Letter word', pro: 'উচ্চারণ: উই' },
+                { text: 'Be', sub: '2-Letter word', pro: 'উচ্চারণ: বি' }, { text: 'My', sub: '2-Letter word', pro: 'উচ্চারণ: মাই' },
+                { text: 'By', sub: '2-Letter word', pro: 'উচ্চারণ: বাই' }, { text: 'Or', sub: '2-Letter word', pro: 'উচ্চারণ: অর' },
+                { text: 'If', sub: '2-Letter word', pro: 'উচ্চারণ: ইফ' }, { text: 'Is', sub: '2-Letter word', pro: 'উচ্চারণ: ইজ' },
+                { text: 'It', sub: '2-Letter word', pro: 'উচ্চারণ: ইট' }, { text: 'Am', sub: '2-Letter word', pro: 'উচ্চারণ: অ্যাম' },
+                { text: 'An', sub: '2-Letter word', pro: 'উচ্চারণ: অ্যান' }, { text: 'As', sub: '2-Letter word', pro: 'উচ্চারণ: অ্যাজ' },
+                { text: 'To', sub: '2-Letter word', pro: 'উচ্চারণ: টু' }, { text: 'Up', sub: '2-Letter word', pro: 'উচ্চারণ: আপ' },
+                { text: 'Us', sub: '2-Letter word', pro: 'উচ্চারণ: আস' }, { text: 'Ox', sub: '2-Letter word', pro: 'উচ্চারণ: অক্স' },
+                { text: 'Ex', sub: '2-Letter word', pro: 'উচ্চারণ: এক্স' }, { text: 'Hi', sub: '2-Letter word', pro: 'উচ্চারণ: হাই' },
+                { text: 'Ho', sub: '2-Letter word', pro: 'উচ্চারণ: হো' }, { text: 'Ha', sub: '2-Letter word', pro: 'উচ্চারণ: হা' },
+                { text: 'Oh', sub: '2-Letter word', pro: 'উচ্চারণ: ওহ' }, { text: 'Ah', sub: '2-Letter word', pro: 'উচ্চারণ: আহ' },
+                { text: 'Ay', sub: '2-Letter word', pro: 'উচ্চারণ: এ' }, { text: 'Ye', sub: '2-Letter word', pro: 'উচ্চারণ: ইয়ে' },
+                { text: 'Qi', sub: '2-Letter word', pro: 'উচ্চারণ: চি' }, { text: 'Xu', sub: '2-Letter word', pro: 'উচ্চারণ: জু' },
+                { text: 'Lo', sub: '2-Letter word', pro: 'উচ্চারণ: লো' }, { text: 'La', sub: '2-Letter word', pro: 'উচ্চারণ: লা' },
+                { text: 'Pa', sub: '2-Letter word', pro: 'উচ্চারণ: পা' }, { text: 'Ma', sub: '2-Letter word', pro: 'উচ্চারণ: মা' },
+                { text: 'Ta', sub: '2-Letter word', pro: 'উচ্চারণ: টা' }, { text: 'Fa', sub: '2-Letter word', pro: 'উচ্চারণ: ফা' },
+                { text: 'Re', sub: '2-Letter word', pro: 'উচ্চারণ: রে' }, { text: 'Mi', sub: '2-Letter word', pro: 'উচ্চারণ: মি' },
+                { text: 'Ti', sub: '2-Letter word', pro: 'উচ্চারণ: টি' }, { text: 'Ab', sub: '2-Letter word', pro: 'উচ্চারণ: অ্যাব' },
+                { text: 'Ad', sub: '2-Letter word', pro: 'উচ্চারণ: অ্যাড' }, { text: 'Ag', sub: '2-Letter word', pro: 'উচ্চারণ: অ্যাগ' },
+                { text: 'Ed', sub: '2-Letter word', pro: 'উচ্চারণ: এড' }, { text: 'Ef', sub: '2-Letter word', pro: 'উচ্চারণ: এফ' },
+                { text: 'El', sub: '2-Letter word', pro: 'উচ্চারণ: এল' }, { text: 'Em', sub: '2-Letter word', pro: 'উচ্চারণ: এম' }
+            ],
+            cat3: [
+                { text: 'Cat', sub: 'Small word', pro: 'উচ্চারণ: ক্যাট' }, { text: 'Pen', sub: 'Small word', pro: 'উচ্চারণ: পেন' },
+                { text: 'Dog', sub: 'Small word', pro: 'উচ্চারণ: ডগ' }, { text: 'Box', sub: 'Small word', pro: 'উচ্চারণ: বক্স' },
+                { text: 'Bat', sub: 'Small word', pro: 'উচ্চারণ: ব্যাট' }, { text: 'Rat', sub: 'Small word', pro: 'উচ্চারণ: র‍্যাট' },
+                { text: 'Hat', sub: 'Small word', pro: 'উচ্চারণ: হ্যাট' }, { text: 'Mat', sub: 'Small word', pro: 'উচ্চারণ: ম্যাট' },
+                { text: 'Cup', sub: 'Small word', pro: 'উচ্চারণ: কাপ' }, { text: 'Mug', sub: 'Small word', pro: 'উচ্চারণ: মগ' },
+                { text: 'Jug', sub: 'Small word', pro: 'উচ্চারণ: জগ' }, { text: 'Bag', sub: 'Small word', pro: 'উচ্চারণ: ব্যাগ' },
+                { text: 'Tag', sub: 'Small word', pro: 'উচ্চারণ: ট্যাগ' }, { text: 'Fan', sub: 'Small word', pro: 'উচ্চারণ: ফ্যান' },
+                { text: 'Van', sub: 'Small word', pro: 'উচ্চারণ: ভ্যান' }, { text: 'Man', sub: 'Small word', pro: 'উচ্চারণ: ম্যান' },
+                { text: 'Pan', sub: 'Small word', pro: 'উচ্চারণ: প্যান' }, { text: 'Run', sub: 'Small word', pro: 'উচ্চারণ: রান' },
+                { text: 'Sun', sub: 'Small word', pro: 'উচ্চারণ: সান' }, { text: 'Gun', sub: 'Small word', pro: 'উচ্চারণ: গান' },
+                { text: 'Net', sub: 'Small word', pro: 'উচ্চারণ: নেট' }, { text: 'Wet', sub: 'Small word', pro: 'উচ্চারণ: ওয়েট' },
+                { text: 'Set', sub: 'Small word', pro: 'উচ্চারণ: সেট' }, { text: 'Get', sub: 'Small word', pro: 'উচ্চারণ: গেট' },
+                { text: 'Let', sub: 'Small word', pro: 'উচ্চারণ: লেট' }, { text: 'Hen', sub: 'Small word', pro: 'উচ্চারণ: হেন' },
+                { text: 'Ten', sub: 'Small word', pro: 'উচ্চারণ: টেন' }, { text: 'Den', sub: 'Small word', pro: 'উচ্চারণ: ডেন' },
+                { text: 'Pig', sub: 'Small word', pro: 'উচ্চারণ: পিগ' }, { text: 'Dig', sub: 'Small word', pro: 'উচ্চারণ: ডিগ' },
+                { text: 'Fig', sub: 'Small word', pro: 'উচ্চারণ: ফিগ' }, { text: 'Lip', sub: 'Small word', pro: 'উচ্চারণ: লিপ' },
+                { text: 'Zip', sub: 'Small word', pro: 'উচ্চারণ: জিপ' }, { text: 'Dip', sub: 'Small word', pro: 'উচ্চারণ: ডিপ' },
+                { text: 'Tip', sub: 'Small word', pro: 'উচ্চারণ: টিপ' }, { text: 'Top', sub: 'Small word', pro: 'উচ্চারণ: টপ' },
+                { text: 'Mop', sub: 'Small word', pro: 'উচ্চারণ: মপ' }, { text: 'Hop', sub: 'Small word', pro: 'উচ্চারণ: হপ' },
+                { text: 'Pop', sub: 'Small word', pro: 'উচ্চারণ: পপ' }, { text: 'Pot', sub: 'Small word', pro: 'উচ্চারণ: পট' },
+                { text: 'Cot', sub: 'Small word', pro: 'উচ্চারণ: কট' }, { text: 'Hot', sub: 'Small word', pro: 'উচ্চারণ: হট' },
+                { text: 'Not', sub: 'Small word', pro: 'উচ্চারণ: নট' }, { text: 'Dot', sub: 'Small word', pro: 'উচ্চারণ: ডট' },
+                { text: 'Bed', sub: 'Small word', pro: 'উচ্চারণ: বেড' }, { text: 'Red', sub: 'Small word', pro: 'উচ্চারণ: রেড' },
+                { text: 'Led', sub: 'Small word', pro: 'উচ্চারণ: লেড' }, { text: 'Nut', sub: 'Small word', pro: 'উচ্চারণ: নাট' },
+                { text: 'Cut', sub: 'Small word', pro: 'উচ্চারণ: কাট' }, { text: 'But', sub: 'Small word', pro: 'উচ্চারণ: বাট' }
+            ],
+            cat4: [
+                { text: 'Needle', sub: 'Garments', pro: 'উচ্চারণ: নিডল' }, { text: 'Thread', sub: 'Garments', pro: 'উচ্চারণ: থ্রেড' },
+                { text: 'Button', sub: 'Garments', pro: 'উচ্চারণ: বাটন' }, { text: 'Scissors', sub: 'Garments', pro: 'উচ্চারণ: সিজরস' },
+                { text: 'Zipper', sub: 'Garments', pro: 'উচ্চারণ: জিপার' }, { text: 'Collar', sub: 'Garments', pro: 'উচ্চারণ: কলার' },
+                { text: 'Cuff', sub: 'Garments', pro: 'উচ্চারণ: কাফ' }, { text: 'Pocket', sub: 'Garments', pro: 'উচ্চারণ: পকেট' },
+                { text: 'Sleeve', sub: 'Garments', pro: 'উচ্চারণ: স্লিভ' }, { text: 'Hem', sub: 'Garments', pro: 'উচ্চারণ: হেম' },
+                { text: 'Seam', sub: 'Garments', pro: 'উচ্চারণ: সিম' }, { text: 'Fabric', sub: 'Garments', pro: 'উচ্চারণ: ফ্যাব্রিক' },
+                { text: 'Cotton', sub: 'Garments', pro: 'উচ্চারণ: কটন' }, { text: 'Denim', sub: 'Garments', pro: 'উচ্চারণ: ডেনিম' },
+                { text: 'Lining', sub: 'Garments', pro: 'উচ্চারণ: লাইনিং' }, { text: 'Interlining', sub: 'Garments', pro: 'উচ্চারণ: ইন্টারলাইনিং' },
+                { text: 'Elastic', sub: 'Garments', pro: 'উচ্চারণ: ইলাস্টিক' }, { text: 'Ribbon', sub: 'Garments', pro: 'উচ্চারণ: রিবন' },
+                { text: 'Lace', sub: 'Garments', pro: 'উচ্চারণ: লেস' }, { text: 'Hook', sub: 'Garments', pro: 'উচ্চারণ: হুক' },
+                { text: 'Eyelet', sub: 'Garments', pro: 'উচ্চারণ: আইলেট' }, { text: 'Label', sub: 'Garments', pro: 'উচ্চারণ: লেবেল' },
+                { text: 'Hangtag', sub: 'Garments', pro: 'উচ্চারণ: হ্যাংট্যাগ' }, { text: 'Polybag', sub: 'Garments', pro: 'উচ্চারণ: পলিব্যাগ' },
+                { text: 'Carton', sub: 'Garments', pro: 'উচ্চারণ: কার্টন' }, { text: 'Iron', sub: 'Garments', pro: 'উচ্চারণ: আয়রন' },
+                { text: 'Table', sub: 'Garments', pro: 'উচ্চারণ: টেবিল' }, { text: 'Machine', sub: 'Garments', pro: 'উচ্চারণ: মেশিন' },
+                { text: 'Singer', sub: 'Garments', pro: 'উচ্চারণ: সিঙ্গার' }, { text: 'Overlock', sub: 'Garments', pro: 'উচ্চারণ: ওভারলক' },
+                { text: 'Flatlock', sub: 'Garments', pro: 'উচ্চারণ: ফ্ল্যাটলক' }, { text: 'Buttonhole', sub: 'Garments', pro: 'উচ্চারণ: বাটনহোল' },
+                { text: 'Placket', sub: 'Garments', pro: 'উচ্চারণ: প্ল্যাকেট' }, { text: 'Yoke', sub: 'Garments', pro: 'উচ্চারণ: ইয়োক' },
+                { text: 'Dart', sub: 'Garments', pro: 'উচ্চারণ: ডার্ট' }, { text: 'Pleat', sub: 'Garments', pro: 'উচ্চারণ: প্ল্লিট' },
+                { text: 'Fringe', sub: 'Garments', pro: 'উচ্চারণ: ফ্রিঞ্জ' }, { text: 'Bead', sub: 'Garments', pro: 'উচ্চারণ: বিড' },
+                { text: 'Sequence', sub: 'Garments', pro: 'উচ্চারণ: সিকোয়েন্স' }, { text: 'Print', sub: 'Garments', pro: 'উচ্চারণ: প্রিন্ট' },
+                { text: 'Embroidery', sub: 'Garments', pro: 'উচ্চারণ: এমব্রয়ডারি' }, { text: 'Washing', sub: 'Garments', pro: 'উচ্চারণ: ওয়াশিং' },
+                { text: 'Dyeing', sub: 'Garments', pro: 'উচ্চারণ: ডাইং' }, { text: 'Cutting', sub: 'Garments', pro: 'উচ্চারণ: কাটিং' },
+                { text: 'Sewing', sub: 'Garments', pro: 'উচ্চারণ: সোয়িং' }, { text: 'Finishing', sub: 'Garments', pro: 'উচ্চারণ: ফিনিশিং' },
+                { text: 'Quality', sub: 'Garments', pro: 'উচ্চারণ: কোয়ালিটি' }, { text: 'Inspection', sub: 'Garments', pro: 'উচ্চারণ: ইন্সপেকশন' },
+                { text: 'Buyer', sub: 'Garments', pro: 'উচ্চারণ: বায়ার' }, { text: 'Sample', sub: 'Garments', pro: 'উচ্চারণ: স্যাম্পল' }
+            ],
+            cat5: [
+                { text: 'Red', sub: 'Color', pro: 'উচ্চারণ: রেড' }, { text: 'Blue', sub: 'Color', pro: 'উচ্চারণ: ব্লু' },
+                { text: 'Green', sub: 'Color', pro: 'উচ্চারণ: গ্রিন' }, { text: 'White', sub: 'Color', pro: 'উচ্চারণ: হোয়াইট' },
+                { text: 'Black', sub: 'Color', pro: 'উচ্চারণ: ব্ল্যাক' }, { text: 'Yellow', sub: 'Color', pro: 'উচ্চারণ: ইয়েলো' },
+                { text: 'Orange', sub: 'Color', pro: 'উচ্চারণ: অরেঞ্জ' }, { text: 'Pink', sub: 'Color', pro: 'উচ্চারণ: পিংক' },
+                { text: 'Purple', sub: 'Color', pro: 'উচ্চারণ: পার্পল' }, { text: 'Brown', sub: 'Color', pro: 'উচ্চারণ: ব্রাউন' },
+                { text: 'Grey', sub: 'Color', pro: 'উচ্চারণ: গ্রে' }, { text: 'Gold', sub: 'Color', pro: 'উচ্চারণ: গোল্ড' },
+                { text: 'Silver', sub: 'Color', pro: 'উচ্চারণ: সিলভার' }, { text: 'Violet', sub: 'Color', pro: 'উচ্চারণ: ভায়োলেট' },
+                { text: 'Indigo', sub: 'Color', pro: 'উচ্চারণ: ইন্ডিগো' }, { text: 'Maroon', sub: 'Color', pro: 'উচ্চারণ: মেরুন' },
+                { text: 'Navy', sub: 'Color', pro: 'উচ্চারণ: নেভি' }, { text: 'Olive', sub: 'Color', pro: 'উচ্চারণ: অলিভ' },
+                { text: 'Peach', sub: 'Color', pro: 'উচ্চারণ: পিচ' }, { text: 'Cyan', sub: 'Color', pro: 'উচ্চারণ: সায়ান' },
+                { text: 'Magenta', sub: 'Color', pro: 'উচ্চারণ: ম্যাজেন্টা' }, { text: 'Teal', sub: 'Color', pro: 'উচ্চারণ: টিল' },
+                { text: 'Turquoise', sub: 'Color', pro: 'উচ্চারণ: টারকোয়াইজ' }, { text: 'Lavender', sub: 'Color', pro: 'উচ্চারণ: ল্যাভেন্ডার' },
+                { text: 'Coral', sub: 'Color', pro: 'উচ্চারণ: কোরাল' }, { text: 'Beige', sub: 'Color', pro: 'উচ্চারণ: বেইজ' },
+                { text: 'Cream', sub: 'Color', pro: 'উচ্চারণ: ক্রিম' }, { text: 'Tan', sub: 'Color', pro: 'উচ্চারণ: ট্যান' },
+                { text: 'Khaki', sub: 'Color', pro: 'উচ্চারণ: খাকি' }, { text: 'Amber', sub: 'Color', pro: 'উচ্চারণ: অ্যাম্বার' },
+                { text: 'Ruby', sub: 'Color', pro: 'উচ্চারণ: রুবি' }, { text: 'Emerald', sub: 'Color', pro: 'উচ্চারণ: এমারেল্ড' },
+                { text: 'Sapphire', sub: 'Color', pro: 'উচ্চারণ: স্যাফায়ার' }, { text: 'Bronze', sub: 'Color', pro: 'উচ্চারণ: ব্রোঞ্জ' },
+                { text: 'Copper', sub: 'Color', pro: 'উচ্চারণ: কপার' }, { text: 'Plum', sub: 'Color', pro: 'উচ্চারণ: প্লাম' },
+                { text: 'Lime', sub: 'Color', pro: 'উচ্চারণ: লাইম' }, { text: 'Mint', sub: 'Color', pro: 'উচ্চারণ: মিন্ট' },
+                { text: 'Mustard', sub: 'Color', pro: 'উচ্চারণ: মাস্টার্ড' }, { text: 'Rust', sub: 'Color', pro: 'উচ্চারণ: রাস্ট' },
+                { text: 'Steel', sub: 'Color', pro: 'উচ্চারণ: স্টিল' }, { text: 'Charcoal', sub: 'Color', pro: 'উচ্চারণ: চারকোল' },
+                { text: 'Ash', sub: 'Color', pro: 'উচ্চারণ: অ্যাশ' }, { text: 'Snow', sub: 'Color', pro: 'উচ্চারণ: স্নো' },
+                { text: 'Ivory', sub: 'Color', pro: 'উচ্চারণ: আইভরি' }, { text: 'Pearl', sub: 'Color', pro: 'উচ্চারণ: পার্ল' },
+                { text: 'Lilac', sub: 'Color', pro: 'উচ্চারণ: লিলাক' }, { text: 'Mauve', sub: 'Color', pro: 'উচ্চারণ: মোভ' },
+                { text: 'Ochre', sub: 'Color', pro: 'উচ্চারণ: ওকার' }, { text: 'Azure', sub: 'Color', pro: 'উচ্চারণ: অ্যাজুর' }
+            ],
+            cat6: [
+                { text: 'One', sub: 'Number', pro: 'উচ্চারণ: ওয়ান' }, { text: 'Two', sub: 'Number', pro: 'উচ্চারণ: টু' },
+                { text: 'Three', sub: 'Number', pro: 'উচ্চারণ: থ্রি' }, { text: 'Four', sub: 'Number', pro: 'উচ্চারণ: ফোর' },
+                { text: 'Five', sub: 'Number', pro: 'উচ্চারণ: ফাইভ' }, { text: 'Six', sub: 'Number', pro: 'উচ্চারণ: সিক্স' },
+                { text: 'Seven', sub: 'Number', pro: 'উচ্চারণ: সেভেন' }, { text: 'Eight', sub: 'Number', pro: 'উচ্চারণ: এইট' },
+                { text: 'Nine', sub: 'Number', pro: 'উচ্চারণ: নাইন' }, { text: 'Ten', sub: 'Number', pro: 'উচ্চারণ: টেন' },
+                { text: 'Eleven', sub: 'Number', pro: 'উচ্চারণ: ইলেভেন' }, { text: 'Twelve', sub: 'Number', pro: 'উচ্চারণ: টুয়েলভ' },
+                { text: 'Thirteen', sub: 'Number', pro: 'উচ্চারণ: থারটিন' }, { text: 'Fourteen', sub: 'Number', pro: 'উচ্চারণ: ফোর্টিন' },
+                { text: 'Fifteen', sub: 'Number', pro: 'উচ্চারণ: ফিফটিন' }, { text: 'Sixteen', sub: 'Number', pro: 'উচ্চারণ: সিক্সটিন' },
+                { text: 'Seventeen', sub: 'Number', pro: 'উচ্চারণ: সেভেন্টিন' }, { text: 'Eighteen', sub: 'Number', pro: 'উচ্চারণ: এইটিন' },
+                { text: 'Nineteen', sub: 'Number', pro: 'উচ্চারণ: নাইন্টিন' }, { text: 'Twenty', sub: 'Number', pro: 'উচ্চারণ: টোয়েন্টি' },
+                { text: 'Twenty-One', sub: 'Number', pro: 'উচ্চারণ: টোয়েন্টি ওয়ান' }, { text: 'Twenty-Two', sub: 'Number', pro: 'উচ্চারণ: টোয়েন্টি টু' },
+                { text: 'Twenty-Three', sub: 'Number', pro: 'উচ্চারণ: টোয়েন্টি থ্রি' }, { text: 'Twenty-Four', sub: 'Number', pro: 'উচ্চারণ: টোয়েন্টি ফোর' },
+                { text: 'Twenty-Five', sub: 'Number', pro: 'উচ্চারণ: টোয়েন্টি ফাইভ' }, { text: 'Twenty-Six', sub: 'Number', pro: 'উচ্চারণ: টোয়েন্টি সিক্স' },
+                { text: 'Twenty-Seven', sub: 'Number', pro: 'উচ্চারণ: টোয়েন্টি সেভেন' }, { text: 'Twenty-Eight', sub: 'Number', pro: 'উচ্চারণ: টোয়েন্টি এইট' },
+                { text: 'Twenty-Nine', sub: 'Number', pro: 'উচ্চারণ: টোয়েন্টি নাইন' }, { text: 'Thirty', sub: 'Number', pro: 'উচ্চারণ: থার্টি' },
+                { text: 'Forty', sub: 'Number', pro: 'উচ্চারণ: ফোর্টি' }, { text: 'Fifty', sub: 'Number', pro: 'উচ্চারণ: ফিফটি' },
+                { text: 'Sixty', sub: 'Number', pro: 'উচ্চারণ: সিক্সটি' }, { text: 'Seventy', sub: 'Number', pro: 'উচ্চারণ: সেভেন্টি' },
+                { text: 'Eighty', sub: 'Number', pro: 'উচ্চারণ: এইটি' }, { text: 'Ninety', sub: 'Number', pro: 'উচ্চারণ: নাইন্টি' },
+                { text: 'Hundred', sub: 'Number', pro: 'উচ্চারণ: হান্ড্রেড' }, { text: 'Thousand', sub: 'Number', pro: 'উচ্চারণ: থাউজেন্ড' },
+                { text: 'Million', sub: 'Number', pro: 'উচ্চারণ: মিলিয়ন' }, { text: 'Billion', sub: 'Number', pro: 'উচ্চারণ: বিলিয়ন' },
+                { text: 'First', sub: 'Ordinal', pro: 'উচ্চারণ: ফার্স্ট' }, { text: 'Second', sub: 'Ordinal', pro: 'উচ্চারণ: সেকেন্ড' },
+                { text: 'Third', sub: 'Ordinal', pro: 'উচ্চারণ: থার্ড' }, { text: 'Fourth', sub: 'Ordinal', pro: 'উচ্চারণ: ফোরথ' },
+                { text: 'Fifth', sub: 'Ordinal', pro: 'উচ্চারণ: ফিফথ' }, { text: 'Sixth', sub: 'Ordinal', pro: 'উচ্চারণ: সিক্সথ' },
+                { text: 'Seventh', sub: 'Ordinal', pro: 'উচ্চারণ: সেভেন্থ' }, { text: 'Eighth', sub: 'Ordinal', pro: 'উচ্চারণ: এইটথ' },
+                { text: 'Ninth', sub: 'Ordinal', pro: 'উচ্চারণ: নাইনথ' }, { text: 'Tenth', sub: 'Ordinal', pro: 'উচ্চারণ: টেনথ' }
+            ],
+            cat7: [
+                { text: 'Saturday', sub: 'Day', pro: 'উচ্চারণ: স্যাটারডে' }, { text: 'Sunday', sub: 'Day', pro: 'উচ্চারণ: সানডে' },
+                { text: 'Monday', sub: 'Day', pro: 'উচ্চারণ: মানডে' }, { text: 'Tuesday', sub: 'Day', pro: 'উচ্চারণ: টিউসডে' },
+                { text: 'Wednesday', sub: 'Day', pro: 'উচ্চারণ: ওয়েজডে' }, { text: 'Thursday', sub: 'Day', pro: 'উচ্চারণ: থার্সডে' },
+                { text: 'Friday', sub: 'Day', pro: 'উচ্চারণ: ফ্রাইডে' }, { text: 'January', sub: 'Month', pro: 'উচ্চারণ: জানুয়ারি' },
+                { text: 'February', sub: 'Month', pro: 'উচ্চারণ: ফেব্রুয়ারি' }, { text: 'March', sub: 'Month', pro: 'উচ্চারণ: মার্চ' },
+                { text: 'April', sub: 'Month', pro: 'উচ্চারণ: এপ্রিল' }, { text: 'May', sub: 'Month', pro: 'উচ্চারণ: মে' },
+                { text: 'June', sub: 'Month', pro: 'উচ্চারণ: জুন' }, { text: 'July', sub: 'Month', pro: 'উচ্চারণ: জুলাই' },
+                { text: 'August', sub: 'Month', pro: 'উচ্চারণ: আগস্ট' }, { text: 'September', sub: 'Month', pro: 'উচ্চারণ: সেপ্টেম্বর' },
+                { text: 'October', sub: 'Month', pro: 'উচ্চারণ: অক্টোবর' }, { text: 'November', sub: 'Month', pro: 'উচ্চারণ: নভেম্বর' },
+                { text: 'December', sub: 'Month', pro: 'উচ্চারণ: ডিসেম্বর' }, { text: 'Today', sub: 'Time', pro: 'উচ্চারণ: টুডে' },
+                { text: 'Tomorrow', sub: 'Time', pro: 'উচ্চারণ: টুমরো' }, { text: 'Yesterday', sub: 'Time', pro: 'উচ্চারণ: ইয়েস্টারডে' },
+                { text: 'Morning', sub: 'Time', pro: 'উচ্চারণ: মর্নিং' }, { text: 'Afternoon', sub: 'Time', pro: 'উচ্চারণ: আফটারনুন' },
+                { text: 'Evening', sub: 'Time', pro: 'উচ্চারণ: ইভনিং' }, { text: 'Night', sub: 'Time', pro: 'উচ্চারণ: নাইট' },
+                { text: 'Week', sub: 'Time', pro: 'উচ্চারণ: উইক' }, { text: 'Month', sub: 'Time', pro: 'উচ্চারণ: মান্থ' },
+                { text: 'Year', sub: 'Time', pro: 'উচ্চারণ: ইয়ার' }, { text: 'Hour', sub: 'Time', pro: 'উচ্চারণ: আওয়ার' },
+                { text: 'Minute', sub: 'Time', pro: 'উচ্চারণ: মিনিট' }, { text: 'Second', sub: 'Time', pro: 'উচ্চারণ: সেকেন্ড' },
+                { text: 'Spring', sub: 'Season', pro: 'উচ্চারণ: স্প্রিং' }, { text: 'Summer', sub: 'Season', pro: 'উচ্চারণ: সামার' },
+                { text: 'Autumn', sub: 'Season', pro: 'উচ্চারণ: অটাম' }, { text: 'Winter', sub: 'Season', pro: 'উচ্চারণ: উইন্টার' },
+                { text: 'Rainy', sub: 'Season', pro: 'উচ্চারণ: রেইনি' }, { text: 'Always', sub: 'Adverb', pro: 'উচ্চারণ: অলওয়েজ' },
+                { text: 'Never', sub: 'Adverb', pro: 'উচ্চারণ: নেভার' }, { text: 'Sometimes', sub: 'Adverb', pro: 'উচ্চারণ: সামটাইমস' },
+                { text: 'Often', sub: 'Adverb', pro: 'উচ্চারণ: অফেন' }, { text: 'Usually', sub: 'Adverb', pro: 'উচ্চারণ: ইউজুয়ালি' },
+                { text: 'Now', sub: 'Adverb', pro: 'উচ্চারণ: নাও' }, { text: 'Then', sub: 'Adverb', pro: 'উচ্চারণ: দেন' },
+                { text: 'Soon', sub: 'Adverb', pro: 'উচ্চারণ: সুন' }, { text: 'Late', sub: 'Adverb', pro: 'উচ্চারণ: লেট' },
+                { text: 'Early', sub: 'Adverb', pro: 'উচ্চারণ: আর্লি' }, { text: 'Again', sub: 'Adverb', pro: 'উচ্চারণ: এগেইন' },
+                { text: 'Always', sub: 'Adverb', pro: 'উচ্চারণ: অলওয়েজ' }, { text: 'Daily', sub: 'Adverb', pro: 'উচ্চারণ: ডেইলি' }
+            ],
+            cat8: [
+                { text: 'Head', sub: 'Body part', pro: 'উচ্চারণ: হেড' }, { text: 'Hair', sub: 'Body part', pro: 'উচ্চারণ: হেয়ার' },
+                { text: 'Face', sub: 'Body part', pro: 'উচ্চারণ: ফেস' }, { text: 'Eye', sub: 'Body part', pro: 'উচ্চারণ: আই' },
+                { text: 'Ear', sub: 'Body part', pro: 'উচ্চারণ: ইয়ার' }, { text: 'Nose', sub: 'Body part', pro: 'উচ্চারণ: নোেজ' },
+                { text: 'Mouth', sub: 'Body part', pro: 'উচ্চারণ: মাউথ' }, { text: 'Lip', sub: 'Body part', pro: 'উচ্চারণ: লিপ' },
+                { text: 'Tooth', sub: 'Body part', pro: 'উচ্চারণ: টুথ' }, { text: 'Tongue', sub: 'Body part', pro: 'উচ্চারণ: টাং' },
+                { text: 'Neck', sub: 'Body part', pro: 'উচ্চারণ: নেক' }, { text: 'Throat', sub: 'Body part', pro: 'উচ্চারণ: থ্রোট' },
+                { text: 'Shoulder', sub: 'Body part', pro: 'উচ্চারণ: শোল্ডার' }, { text: 'Arm', sub: 'Body part', pro: 'উচ্চারণ: আর্ম' },
+                { text: 'Hand', sub: 'Body part', pro: 'উচ্চারণ: হ্যান্ড' }, { text: 'Finger', sub: 'Body part', pro: 'উচ্চারণ: ফিঙ্গার' },
+                { text: 'Thumb', sub: 'Body part', pro: 'উচ্চারণ: থাম' }, { text: 'Chest', sub: 'Body part', pro: 'উচ্চারণ: চেস্ট' },
+                { text: 'Stomach', sub: 'Body part', pro: 'উচ্চারণ: স্টমাক' }, { text: 'Back', sub: 'Body part', pro: 'উচ্চারণ: ব্যাক' },
+                { text: 'Waist', sub: 'Body part', pro: 'উচ্চারণ: ওয়েস্ট' }, { text: 'Leg', sub: 'Body part', pro: 'উচ্চারণ: লেগ' },
+                { text: 'Knee', sub: 'Body part', pro: 'উচ্চারণ: নি' }, { text: 'Foot', sub: 'Body part', pro: 'উচ্চারণ: ফুট' },
+                { text: 'Toe', sub: 'Body part', pro: 'উচ্চারণ: টো' }, { text: 'Skin', sub: 'Body part', pro: 'উচ্চারণ: স্কিন' },
+                { text: 'Bone', sub: 'Body part', pro: 'উচ্চারণ: বোন' }, { text: 'Blood', sub: 'Body part', pro: 'উচ্চারণ: ব্লাড' },
+                { text: 'Heart', sub: 'Body part', pro: 'উচ্চারণ: হার্ট' }, { text: 'Lung', sub: 'Body part', pro: 'উচ্চারণ: লাং' },
+                { text: 'Brain', sub: 'Body part', pro: 'উচ্চারণ: ব্রেইন' }, { text: 'Muscle', sub: 'Body part', pro: 'উচ্চারণ: মাসল' },
+                { text: 'Chin', sub: 'Body part', pro: 'উচ্চারণ: চিন' }, { text: 'Cheek', sub: 'Body part', pro: 'উচ্চারণ: চিক' },
+                { text: 'Forehead', sub: 'Body part', pro: 'উচ্চারণ: ফোরহেড' }, { text: 'Eyebrow', sub: 'Body part', pro: 'উচ্চারণ: আইব্রো' },
+                { text: 'Eyelash', sub: 'Body part', pro: 'উচ্চারণ: আইল্যাশ' }, { text: 'Wrist', sub: 'Body part', pro: 'উচ্চারণ: রিস্ট' },
+                { text: 'Palm', sub: 'Body part', pro: 'উচ্চারণ: পাম' }, { text: 'Elbow', sub: 'Body part', pro: 'উচ্চারণ: এলবো' },
+                { text: 'Ankle', sub: 'Body part', pro: 'উচ্চারণ: গোড়ালি' }, { text: 'Heel', sub: 'Body part', pro: 'উচ্চারণ: হিল' },
+                { text: 'Liver', sub: 'Body part', pro: 'উচ্চারণ: লিভার' }, { text: 'Kidney', sub: 'Body part', pro: 'উচ্চারণ: কিডনি' },
+                { text: 'Rib', sub: 'Body part', pro: 'উচ্চারণ: রিব' }, { text: 'Skull', sub: 'Body part', pro: 'উচ্চারণ: স্কাল' },
+                { text: 'Jaw', sub: 'Body part', pro: 'উচ্চারণ: জ' }, { text: 'Gum', sub: 'Body part', pro: 'উচ্চারণ: গাম' },
+                { text: 'Navel', sub: 'Body part', pro: 'উচ্চারণ: নাভি' }, { text: 'Thigh', sub: 'Body part', pro: 'উচ্চারণ: থাই' }
+            ],
+            cat9: [
+                { text: 'Father', sub: 'Family', pro: 'উচ্চারণ: ফাদার' }, { text: 'Mother', sub: 'Family', pro: 'উচ্চারণ: মাদার' },
+                { text: 'Brother', sub: 'Family', pro: 'উচ্চারণ: ব্রাদার' }, { text: 'Sister', sub: 'Family', pro: 'উচ্চারণ: সিস্টার' },
+                { text: 'Grandfather', sub: 'Family', pro: 'উচ্চারণ: গ্র্যান্ডফাদার' }, { text: 'Grandmother', sub: 'Family', pro: 'উচ্চারণ: গ্র্যান্ডমাদার' },
+                { text: 'Uncle', sub: 'Family', pro: 'উচ্চারণ: আঙ্কেল' }, { text: 'Aunt', sub: 'Family', pro: 'উচ্চারণ: আন্ট' },
+                { text: 'Son', sub: 'Family', pro: 'উচ্চারণ: সন' }, { text: 'Daughter', sub: 'Family', pro: 'উচ্চারণ: ডটার' },
+                { text: 'Husband', sub: 'Family', pro: 'উচ্চারণ: হাজবেন্ড' }, { text: 'Wife', sub: 'Family', pro: 'উচ্চারণ: ওয়াইফ' },
+                { text: 'Cousin', sub: 'Family', pro: 'উচ্চারণ: কাজিন' }, { text: 'Nephew', sub: 'Family', pro: 'উচ্চারণ: নেফিউ' },
+                { text: 'Niece', sub: 'Family', pro: 'উচ্চারণ: নিস' }, { text: 'Father-in-law', sub: 'Family', pro: 'উচ্চারণ: ফাদার-ইন-ল' },
+                { text: 'Mother-in-law', sub: 'Family', pro: 'উচ্চারণ: মাদার-ইন-ল' }, { text: 'Brother-in-law', sub: 'Family', pro: 'উচ্চারণ: ব্রাদার-ইন-ল' },
+                { text: 'Sister-in-law', sub: 'Family', pro: 'উচ্চারণ: সিস্টার-ইন-ল' }, { text: 'Son-in-law', sub: 'Family', pro: 'উচ্চারণ: সন-ইন-ল' },
+                { text: 'Daughter-in-law', sub: 'Family', pro: 'উচ্চারণ: ডটার-ইন-ল' }, { text: 'Parents', sub: 'Family', pro: 'উচ্চারণেন্টস: পেরেন্ট' },
+                { text: 'Children', sub: 'Family', pro: 'উচ্চারণ: চিলড্রেন' }, { text: 'Baby', sub: 'Family', pro: 'উচ্চারণ: বেবি' },
+                { text: 'Child', sub: 'Family', pro: 'উচ্চারণ: চাইল্ড' }, { text: 'Relative', sub: 'Family', pro: 'উচ্চারণ: রিলেটিভ' },
+                { text: 'Guest', sub: 'Family', pro: 'উচ্চারণ: গেস্ট' }, { text: 'Friend', sub: 'Family', pro: 'উচ্চারণ: ফ্রেন্ড' },
+                { text: 'Neighbor', sub: 'Family', pro: 'উচ্চারণ: নেইবর' }, { text: 'Partner', sub: 'Family', pro: 'উচ্চারণ: পার্টনার' },
+                { text: 'Guard', sub: 'Family', pro: 'উচ্চারণ: গার্ড' }, { text: 'Master', sub: 'Family', pro: 'উচ্চারণ: মাস্টার' },
+                { text: 'Servant', sub: 'Family', pro: 'উচ্চারণ: সার্ভেন্ট' }, { text: 'Leader', sub: 'Family', pro: 'উচ্চারণ: লিডার' },
+                { text: 'Boss', sub: 'Family', pro: 'উচ্চারণ: বস' }, { text: 'Manager', sub: 'Family', pro: 'উচ্চারণ: ম্যানেজার' },
+                { text: 'Worker', sub: 'Family', pro: 'উচ্চারণ: ওয়ার্কার' }, { text: 'Staff', sub: 'Family', pro: 'উচ্চারণ: স্টাফ' },
+                { text: 'Team', sub: 'Family', pro: 'উচ্চারণ: টিম' }, { text: 'Member', sub: 'Family', pro: 'উচ্চারণ: মেম্বার' },
+                { text: 'Man', sub: 'People', pro: 'উচ্চারণ: ম্যান' }, { text: 'Woman', sub: 'People', pro: 'উচ্চারণ: ওম্যান' },
+                { text: 'Boy', sub: 'People', pro: 'উচ্চারণ: বয়' }, { text: 'Girl', sub: 'People', pro: 'উচ্চারণ: গার্ল' },
+                { text: 'Person', sub: 'People', pro: 'উচ্চারণ: পারসন' }, { text: 'People', sub: 'People', pro: 'উচ্চারণ: পিপল' },
+                { text: 'Crowd', sub: 'People', pro: 'উচ্চারণ: ক্রাউড' }, { text: 'Public', sub: 'People', pro: 'উচ্চারণ: পাবলিক' },
+                { text: 'Society', sub: 'People', pro: 'উচ্চারণ: সোসাইটি' }, { text: 'Citizen', sub: 'People', pro: 'উচ্চারণ: সিটিজেন' }
+            ],
+            cat10: [
+                { text: 'Go - Went', sub: 'Tense', pro: 'উচ্চারণ: গো - ওয়েন্ট' }, { text: 'Eat - Ate', sub: 'Tense', pro: 'উচ্চারণ: ইট - এইট' },
+                { text: 'Come - Came', sub: 'Tense', pro: 'উচ্চারণ: কাম - কেইম' }, { text: 'See - Saw', sub: 'Tense', pro: 'উচ্চারণ: সি - স' },
+                { text: 'Do - Did', sub: 'Tense', pro: 'উচ্চারণ: ডু - ডিড' }, { text: 'Have - Had', sub: 'Tense', pro: 'উচ্চারণ: হ্যাভ - হ্যাড' },
+                { text: 'Make - Made', sub: 'Tense', pro: 'উচ্চারণ: মেক - মেইড' }, { text: 'Take - Took', sub: 'Tense', pro: 'উচ্চারণ: টেক - টুক' },
+                { text: 'Give - Gave', sub: 'Tense', pro: 'উচ্চারণ: গিভ - গেইভ' }, { text: 'Get - Got', sub: 'Tense', pro: 'উচ্চারণ: গেট - গট' },
+                { text: 'Know - Knew', sub: 'Tense', pro: 'উচ্চারণ: নো - নিউ' }, { text: 'Think - Thought', sub: 'Tense', pro: 'উচ্চারণ: থিংক - থট' },
+                { text: 'Say - Said', sub: 'Tense', pro: 'উচ্চারণ: সে - সেড' }, { text: 'Tell - Told', sub: 'Tense', pro: 'উচ্চারণ: টেল - টোল্ড' },
+                { text: 'Find - Found', sub: 'Tense', pro: 'উচ্চারণ: ফাইন্ড - ফাউন্ড' }, { text: 'Buy - Bought', sub: 'Tense', pro: 'উচ্চারণ: বাই - বট' },
+                { text: 'Bring - Brought', sub: 'Tense', pro: 'উচ্চারণ: ব্রিং - ব্রট' }, { text: 'Send - Sent', sub: 'Tense', pro: 'উচ্চারণ: সেন্ড - সেন্ট' },
+                { text: 'Spend - Spent', sub: 'Tense', pro: 'উচ্চারণ: স্পেন্ড - স্পেন্ট' }, { text: 'Build - Built', sub: 'Tense', pro: 'উচ্চারণ: বিল্ড - বিল্ট' },
+                { text: 'Keep - Kept', sub: 'Tense', pro: 'উচ্চারণ: কিপ - কেপ্ট' }, { text: 'Feel - Felt', sub: 'Tense', pro: 'উচ্চারণ: ফিল - ফেল্ট' },
+                { text: 'Leave - Left', sub: 'Tense', pro: 'উচ্চারণ: লিভ - লেফট' }, { text: 'Meet - Met', sub: 'Tense', pro: 'উচ্চারণ: মিট - মেট' },
+                { text: 'Sleep - Slept', sub: 'Tense', pro: 'উচ্চারণ: স্লিপ - স্লেপ্ট' }, { text: 'Sweep - Swept', sub: 'Tense', pro: 'উচ্চারণ: সুইপ - সুইপ্ট' },
+                { text: 'Hear - Heard', sub: 'Tense', pro: 'উচ্চারণ: হিয়ার - হার্ড' }, { text: 'Read - Read', sub: 'Tense', pro: 'উচ্চারণ: রিড - রেড' },
+                { text: 'Run - Ran', sub: 'Tense', pro: 'উচ্চারণ: রান - র‍্যান' }, { text: 'Sit - Sat', sub: 'Tense', pro: 'উচ্চারণ: সিট - স্যাট' },
+                { text: 'Stand - Stood', sub: 'Tense', pro: 'উচ্চারণ: স্ট্যান্ড - স্টুড' }, { text: 'Write - Wrote', sub: 'Tense', pro: 'উচ্চারণ: রাইট - রোট' },
+                { text: 'Speak - Spoke', sub: 'Tense', pro: 'উচ্চারণ: স্পিক - স্পোক' }, { text: 'Break - Broke', sub: 'Tense', pro: 'উচ্চারণ: ব্রেক - ব্রোক' },
+                { text: 'Choose - Chose', sub: 'Tense', pro: 'উচ্চারণ: চুজ - চোজ' }, { text: 'Drive - Drove', sub: 'Tense', pro: 'উচ্চারণ: ড্রাইভ - ড্রোভ' },
+                { text: 'Ride - Rode', sub: 'Tense', pro: 'উচ্চারণ: রাইড - রোড' }, { text: 'Rise - Rose', sub: 'Tense', pro: 'উচ্চারণ: রাইজ - রোজ' },
+                { text: 'Write - Wrote', sub: 'Tense', pro: 'উচ্চারণ: রাইট - রোট' }, { text: 'Speak - Spoke', sub: 'Tense', pro: 'উচ্চারণ: স্পিক - স্পোক' },
+                { text: 'Fly - Flew', sub: 'Tense', pro: 'উচ্চারণ: ফ্লাই - ফ্লু' }, { text: 'Draw - Drew', sub: 'Tense', pro: 'উচ্চারণ: ড্র - ড্রু' },
+                { text: 'Grow - Grew', sub: 'Tense', pro: 'উচ্চারণ: গ্রো - গ্রু' }, { text: 'Know - Knew', sub: 'Tense', pro: 'উচ্চারণ: নো - নিউ' },
+                { text: 'Throw - Threw', sub: 'Tense', pro: 'উচ্চারণ: থ্রো - থ্রু' }, { text: 'Blow - Blew', sub: 'Tense', pro: 'উচ্চারণ: ব্লো - ব্লু' },
+                { text: 'Fall - Fell', sub: 'Tense', pro: 'উচ্চারণ: ফল - ফেল' }, { text: 'Hold - Held', sub: 'Tense', pro: 'উচ্চারণ: হোল্ড - হেল্ড' },
+                { text: 'Lose - Lost', sub: 'Tense', pro: 'উচ্চারণ: লুজ - লস্ট' }, { text: 'Win - Won', sub: 'Tense', pro: 'উচ্চারণ: উইন - ওন' }
+            ],
+            cat11: [
+                { text: 'Zipper', sub: 'Garments', pro: 'উচ্চারণ: জিপার' }, { text: 'Collar', sub: 'Garments', pro: 'উচ্চারণ: কলার' },
+                { text: 'Pocket', sub: 'Garments', pro: 'উচ্চারণ: পকেট' }, { text: 'Stitching', sub: 'Garments', pro: 'উচ্চারণ: স্টিচিং' },
+                { text: 'Placket', sub: 'Garments', pro: 'উচ্চারণ: প্ল্যাকেট' }, { text: 'Cuff', sub: 'Garments', pro: 'উচ্চারণ: কাফ' },
+                { text: 'Hemline', sub: 'Garments', pro: 'উচ্চারণ: হেমলাইন' }, { text: 'Yoke', sub: 'Garments', pro: 'উচ্চারণ: ইয়োক' },
+                { text: 'Sleeve', sub: 'Garments', pro: 'উচ্চারণ: স্লিভ' }, { text: 'Armhole', sub: 'Garments', pro: 'উচ্চারণ: আর্মহোল' },
+                { text: 'Buttonhole', sub: 'Garments', pro: 'উচ্চারণ: বাটনহোল' }, { text: 'Button', sub: 'Garments', pro: 'উচ্চারণ: বাটন' },
+                { text: 'Label', sub: 'Garments', pro: 'উচ্চারণ: লেবেল' }, { text: 'Carelabel', sub: 'Garments', pro: 'উচ্চারণ: কেয়ার লেবেল' },
+                { text: 'Mainlabel', sub: 'Garments', pro: 'উচ্চারণ: মেইন লেবেল' }, { text: 'Hangsizetag', sub: 'Garments', pro: 'উচ্চারণ: হ্যাং সাইজ ট্যাগ' },
+                { text: 'Polybag', sub: 'Garments', pro: 'উচ্চারণ: পলিব্যাগ' }, { text: 'Carton', sub: 'Garments', pro: 'উচ্চারণ: কার্টন' },
+                { text: 'Thread', sub: 'Garments', pro: 'উচ্চারণ: থ্রেড' }, { text: 'Needle', sub: 'Garments', pro: 'উচ্চারণ: নিডল' },
+                { text: 'Interlining', sub: 'Garments', pro: 'উচ্চারণ: ইন্টারলাইনিং' }, { text: 'Fusing', sub: 'Garments', pro: 'উচ্চারণ: ফিউজিং' },
+                { text: 'Garment', sub: 'Garments', pro: 'উচ্চারণ: গার্মেন্টস' }, { text: 'Apparel', sub: 'Garments', pro: 'উচ্চারণ: অ্যাপারেল' },
+                { text: 'Fabric', sub: 'Garments', pro: 'উচ্চারণ: ফ্যাব্রিক' }, { text: 'Trims', sub: 'Garments', pro: 'উচ্চারণ: ট্রিমস' },
+                { text: 'Accessories', sub: 'Garments', pro: 'উচ্চারণ: অ্যাকসেসরিজ' }, { text: 'Pattern', sub: 'Garments', pro: 'উচ্চারণ: প্যাটার্ন' },
+                { text: 'Marker', sub: 'Garments', pro: 'উচ্চারণ: মার্কার' }, { text: 'Spreader', sub: 'Garments', pro: 'উচ্চারণ: স্প্রেডার' },
+                { text: 'Cutting', sub: 'Garments', pro: 'উচ্চারণ: কাটিং' }, { text: 'Bundle', sub: 'Garments', pro: 'উচ্চারণ: বান্ডিল' },
+                { text: 'Numbering', sub: 'Garments', pro: 'উচ্চারণ: নাম্বারিং' }, { text: 'Sewing', sub: 'Garments', pro: 'উচ্চারণ: সোয়িং' },
+                { text: 'Quality', sub: 'Garments', pro: 'উচ্চারণ: কোয়ালিটি' }, { text: 'Inspection', sub: 'Garments', pro: 'উচ্চারণ: ইন্সপেকশন' },
+                { text: 'Defect', sub: 'Garments', pro: 'উচ্চারণ: ডিফেক্ট' }, { text: 'Alter', sub: 'Garments', pro: 'উচ্চারণ: অল্টার' },
+                { text: 'Reject', sub: 'Garments', pro: 'উচ্চারণ: রিজেক্ট' }, { text: 'Pass', sub: 'Garments', pro: 'উচ্চারণ: পাস' },
+                { text: 'Ironing', sub: 'Garments', pro: 'উচ্চারণ: আয়রনিং' }, { text: 'Packing', sub: 'Garments', pro: 'উচ্চারণ: প্যাকিং' },
+                { text: 'Cartoning', sub: 'Garments', pro: 'উচ্চারণণ: কার্টনিং' }, { text: 'Shipment', sub: 'Garments', pro: 'উচ্চারণ: শিপমেন্ট' },
+                { text: 'Buyer', sub: 'Garments', pro: 'উচ্চারণ: বায়ার' }, { text: 'Supplier', sub: 'Garments', pro: 'উচ্চারণ: সাপ্লায়ার' },
+                { text: 'Merchandiser', sub: 'Garments', pro: 'উচ্চারণ: মার্চেন্ডাইজার' }, { text: 'Supervisor', sub: 'Garments', pro: 'উচ্চারণ: সুপারভাইজার' },
+                { text: 'Operator', sub: 'Garments', pro: 'উচ্চারণ: অপারেটর' }, { text: 'Helper', sub: 'Garments', pro: 'উচ্চারণ: হেল্পার' }
+            ],
+            cat12: [
+                { text: 'Chest', sub: 'Measurement', pro: 'উচ্চারণ: চেস্ট' }, { text: 'Waist', sub: 'Measurement', pro: 'উচ্চারণ: ওয়েস্ট' },
+                { text: 'Sleeve', sub: 'Measurement', pro: 'উচ্চারণ: স্লিভ' }, { text: 'Length', sub: 'Measurement', pro: 'উচ্চারণ: লেন্থ' },
+                { text: 'Shoulder', sub: 'Measurement', pro: 'উচ্চারণ: শোল্ডার' }, { text: 'Neck', sub: 'Measurement', pro: 'উচ্চারণ: নেক' },
+                { text: 'Inseam', sub: 'Measurement', pro: 'উচ্চারণ: ইনসিম' }, { text: 'Outseam', sub: 'Measurement', pro: 'উচ্চারণ: আউটসিম' },
+                { text: 'Rise', sub: 'Measurement', pro: 'উচ্চারণ: রাইজ' }, { text: 'Thigh', sub: 'Measurement', pro: 'উচ্চারণ: থাই' },
+                { text: 'Knee', sub: 'Measurement', pro: 'উচ্চারণ: নি' }, { text: 'Bottom', sub: 'Measurement', pro: 'উচ্চারণ: বটম' },
+                { text: 'Hem', sub: 'Measurement', pro: 'উচ্চারণ: হেম' }, { text: 'Cuff', sub: 'Measurement', pro: 'উচ্চারণ: কাফ' },
+                { text: 'Bicep', sub: 'Measurement', pro: 'উচ্চারণ: বাইসেপ' }, { text: 'Armhole', sub: 'Measurement', pro: 'উচ্চারণ: আর্মহোল' },
+                { text: 'Hips', sub: 'Measurement', pro: 'উচ্চারণ: হিপস' }, { text: 'Sweep', sub: 'Measurement', pro: 'উচ্চারণ: সুইপ' },
+                { text: 'Pocket', sub: 'Measurement', pro: 'উচ্চারণ: পকেট' }, { text: 'Placket', sub: 'Measurement', pro: 'উচ্চারণ: প্ল্যাকেট' },
+                { text: 'Hood', sub: 'Measurement', pro: 'উচ্চারণ: হুড' }, { text: 'Width', sub: 'Measurement', pro: 'উচ্চারণ: উইডথ' },
+                { text: 'Height', sub: 'Measurement', pro: 'উচ্চারণ: হাইট' }, { text: 'Depth', sub: 'Measurement', pro: 'উচ্চারণ: ডেপথ' },
+                { text: 'Tolerance', sub: 'Measurement', pro: 'উচ্চারণ: টলারেন্স' }, { text: 'Spec', sub: 'Measurement', pro: 'উচ্চারণ: স্পেক' },
+                { text: 'Size', sub: 'Measurement', pro: 'উচ্চারণ: সাইজ' }, { text: 'Small', sub: 'Measurement', pro: 'উচ্চারণ: স্মল' },
+                { text: 'Medium', sub: 'Measurement', pro: 'উচ্চারণ: মিডিয়াম' }, { text: 'Large', sub: 'Measurement', pro: 'উচ্চারণ: লার্জ' },
+                { text: 'X-Large', sub: 'Measurement', pro: 'উচ্চারণ: এক্স-লার্জ' }, { text: 'XX-Large', sub: 'Measurement', pro: 'উচ্চারণ: ডাবল এক্স-লার্জ' },
+                { text: 'Inch', sub: 'Measurement', pro: 'উচ্চারণ: ইঞ্চি' }, { text: 'Centimeter', sub: 'Measurement', pro: 'উচ্চারণ: সেন্টিমিটার' },
+                { text: 'Meter', sub: 'Measurement', pro: 'উচ্চারণ: মিটার' }, { text: 'Yard', sub: 'Measurement', pro: 'উচ্চারণ: ইয়ার্ড' },
+                { text: 'Scale', sub: 'Measurement', pro: 'উচ্চারণ: স্কেল' }, { text: 'Tape', sub: 'Measurement', pro: 'উচ্চারণ: টেপ' },
+                { text: 'Measure', sub: 'Measurement', pro: 'উচ্চারণ: মেজার' }, { text: 'Check', sub: 'Measurement', pro: 'উচ্চারণ: চেক' },
+                { text: 'Plus', sub: 'Measurement', pro: 'উচ্চারণ: প্লাস' }, { text: 'Minus', sub: 'Measurement', pro: 'উচ্চারণ: মাইনাস' },
+                { text: 'Exact', sub: 'Measurement', pro: 'উচ্চারণ: এক্স্যাক্ট' }, { text: 'Standard', sub: 'Measurement', pro: 'উচ্চারণ: স্ট্যান্ডার্ড' },
+                { text: 'Range', sub: 'Measurement', pro: 'উচ্চারণ: রেঞ্জ' }, { text: 'Limit', sub: 'Measurement', pro: 'উচ্চারণ: লিমিট' },
+                { text: 'Total', sub: 'Measurement', pro: 'উচ্চারণ: টোটাল' }, { text: 'Average', sub: 'Measurement', pro: 'উচ্চারণ: এভারেজ' },
+                { text: 'Ratio', sub: 'Measurement', pro: 'উচ্চারণ: রেশিও' }, { text: 'Fit', sub: 'Measurement', pro: 'উচ্চারণ: ফিট' }
+            ],
+            cat13: [
+                { text: 'Denim', sub: 'Fabric & Wash', pro: 'উচ্চারণ: ডেনিম' }, { text: 'Cotton', sub: 'Fabric & Wash', pro: 'উচ্চারণ: কটন' },
+                { text: 'Dirty Wash', sub: 'Fabric & Wash', pro: 'উচ্চারণ: ডার্টি ওয়াশ' }, { text: 'Raw Denim', sub: 'Fabric & Wash', pro: 'উচ্চারণ: র ডেনিম' },
+                { text: 'Enzyme Wash', sub: 'Fabric & Wash', pro: 'উচ্চারণ: এনজাইম ওয়াশ' }, { text: 'Stone Wash', sub: 'Fabric & Wash', pro: 'উচ্চারণ: স্টোন ওয়াশ' },
+                { text: 'Bleach Wash', sub: 'Fabric & Wash', pro: 'উচ্চারণ: ব্লিচ ওয়াশ' }, { text: 'Acid Wash', sub: 'Fabric & Wash', pro: 'উচ্চারণ: অ্যাসিড ওয়াশ' },
+                { text: 'Soft Wash', sub: 'Fabric & Wash', pro: 'উচ্চারণ: সফট ওয়াশ' }, { text: 'Rinse Wash', sub: 'Fabric & Wash', pro: 'উচ্চারণ: রিন্স ওয়াশ' },
+                { text: 'Twill', sub: 'Fabric', pro: 'উচ্চারণ: টুইল' }, { text: 'Canvas', sub: 'Fabric', pro: 'উচ্চারণ: ক্যানভাস' },
+                { text: 'Poplin', sub: 'Fabric', pro: 'উচ্চারণ: পপলিন' }, { text: 'Fleece', sub: 'Fabric', pro: 'উচ্চারণ: ফ্লিস' },
+                { text: 'Jersey', sub: 'Fabric', pro: 'উচ্চারণ: জার্সি' }, { text: 'Rib', sub: 'Fabric', pro: 'উচ্চারণ: রিব' },
+                { text: 'Interlock', sub: 'Fabric', pro: 'উচ্চারণ: ইন্টারলক' }, { text: 'Silk', sub: 'Fabric', pro: 'উচ্চারণ: সিল্ক' },
+                { text: 'Wool', sub: 'Fabric', pro: 'উচ্চারণ: উল' }, { text: 'Linen', sub: 'Fabric', pro: 'উচ্চারণ: লিনেন' },
+                { text: 'Polyester', sub: 'Fabric', pro: 'উচ্চারণ: পলিয়েস্টার' }, { text: 'Nylon', sub: 'Fabric', pro: 'উচ্চারণ: নাইলন' },
+                { text: 'Viscose', sub: 'Fabric', pro: 'উচ্চারণ: ভিসকস' }, { text: 'Rayon', sub: 'Fabric', pro: 'উচ্চারণ: রেয়ন' },
+                { text: 'Satin', sub: 'Fabric', pro: 'উচ্চারণ: স্যাটিন' }, { text: 'Velvet', sub: 'Fabric', pro: 'উচ্চারণ: ভেলভেট' },
+                { text: 'Chiffon', sub: 'Fabric', pro: 'উচ্চারণ: শিফন' }, { text: 'Georgette', sub: 'Fabric', pro: 'উচ্চারণ: জর্জেট' },
+                { text: 'Tricot', sub: 'Fabric', pro: 'উচ্চারণ: ট্রাইকট' }, { text: 'Taffeta', sub: 'Fabric', pro: 'উচ্চারণ: টাফেটা' },
+                { text: 'Tear Wash', sub: 'Wash', pro: 'উচ্চারণ: টিয়ার ওয়াশ' }, { text: 'Over Dye', sub: 'Wash', pro: 'উচ্চারণ: ওভার ডাই' },
+                { text: 'Tie Dye', sub: 'Wash', pro: 'উচ্চারণ: টাই ডাই' }, { text: 'Pigment Wash', sub: 'Wash', pro: 'উচ্চারণ: পিগমেন্ট ওয়াশ' },
+                { text: 'Garment Dye', sub: 'Wash', pro: 'উচ্চারণ: গার্মেন্টস ডাই' }, { text: 'Sandblast', sub: 'Wash', pro: 'উচ্চারণ: স্যান্ডব্লাস্ট' },
+                { text: 'Whiskers', sub: 'Wash', pro: 'উচ্চারণ: হুইস্কার্স' }, { text: 'Scraping', sub: 'Wash', pro: 'উচ্চারণ: স্ক্রেপিং' },
+                { text: 'Grinding', sub: 'Wash', pro: 'উচ্চারণ: গ্রাইন্ডিং' }, { text: 'Destroye', sub: 'Wash', pro: 'উচ্চারণ: ডেস্ট্রয়েড' },
+                { text: 'Tints', sub: 'Wash', pro: 'উচ্চারণ: টিন্টস' }, { text: 'Laser', sub: 'Wash', pro: 'উচ্চারণ: লেজার' },
+                { text: 'Resin', sub: 'Wash', pro: 'উচ্চারণ: রেসিন' }, { text: 'Neutral', sub: 'Wash', pro: 'উচ্চারণ: নিউট্রাল' },
+                { text: 'Bio Wash', sub: 'Wash', pro: 'উচ্চারণ: বায়ো ওয়াশ' }, { text: 'Silicon', sub: 'Wash', pro: 'উচ্চারণ: সিলিকন' },
+                { text: 'Micro Wash', sub: 'Wash', pro: 'উচ্চারণ: মাইক্রো ওয়াশ' }, { text: 'Super Soft', sub: 'Wash', pro: 'উচ্চারণ: সুপার সফট' },
+                { text: 'Heavy Wash', sub: 'Wash', pro: 'উচ্চারণ: হেভি ওয়াশ' }, { text: 'Light Wash', sub: 'Wash', pro: 'উচ্চারণ: লাইট ওয়াশ' }
+            ],
+            cat14: [
+                { text: 'Hello', sub: 'Conversation', pro: 'উচ্চারণ: হ্যালো' }, { text: 'Thank you', sub: 'Conversation', pro: 'উচ্চারণ: থ্যাংক ইউ' },
+                { text: 'How are you', sub: 'Conversation', pro: 'উচ্চারণ: হাউ আর ইউ' }, { text: 'Goodbye', sub: 'Conversation', pro: 'উচ্চারণ: গুডবাই' },
+                { text: 'Good morning', sub: 'Conversation', pro: 'উচ্চারণ: গুড মর্নিং' }, { text: 'Good night', sub: 'Conversation', pro: 'উচ্চারণ: গুড নাইট' },
+                { text: 'Please', sub: 'Conversation', pro: 'উচ্চারণ: প্লিজ' }, { text: 'Sorry', sub: 'Conversation', pro: 'উচ্চারণ: সনি' },
+                { text: 'Excuse me', sub: 'Conversation', pro: 'উচ্চারণ: এক্সকিউজ মি' }, { text: 'Welcome', sub: 'Conversation', pro: 'উচ্চারণ: ওয়েলকাম' },
+                { text: 'Yes', sub: 'Conversation', pro: 'উচ্চারণ: ইয়েস' }, { text: 'No', sub: 'Conversation', pro: 'উচ্চারণ: নো' },
+                { text: 'Ok', sub: 'Conversation', pro: 'উচ্চারণ: ওকে' }, { text: 'Fine', sub: 'Conversation', pro: 'উচ্চারণ: ফাইন' },
+                { text: 'Good', sub: 'Conversation', pro: 'উচ্চারণ: গুড' }, { text: 'Bad', sub: 'Conversation', pro: 'উচ্চারণ: ব্যাড' },
+                { text: 'Right', sub: 'Conversation', pro: 'উচ্চারণ: রাইট' }, { text: 'Wrong', sub: 'Conversation', pro: 'উচ্চারণ: রং' },
+                { text: 'Help', sub: 'Conversation', pro: 'উচ্চারণ: হেল্প' }, { text: 'Look', sub: 'Conversation', pro: 'উচ্চারণ: লুক' },
+                { text: 'Listen', sub: 'Conversation', pro: 'উচ্চারণ: লিসেন' }, { text: 'Speak', sub: 'Conversation', pro: 'উচ্চারণ: স্পিক' },
+                { text: 'Write', sub: 'Conversation', pro: 'উচ্চারণ: রাইট' }, { text: 'Read', sub: 'Conversation', pro: 'উচ্চারণ: রিড' },
+                { text: 'Come here', sub: 'Conversation', pro: 'উচ্চারণ: কাম হিয়ার' }, { text: 'Go there', sub: 'Conversation', pro: 'উচ্চারণ: গো দেয়ার' },
+                { text: 'Wait', sub: 'Conversation', pro: 'উচ্চারণ: ওয়েট' }, { text: 'Stop', sub: 'Conversation', pro: 'উচ্চারণ: স্টপ' },
+                { text: 'Start', sub: 'Conversation', pro: 'উচ্চারণ: স্টার্ট' }, { text: 'Finish', sub: 'Conversation', pro: 'উচ্চারণ: ফিনিশ' },
+                { text: 'What', sub: 'Conversation', pro: 'উচ্চারণ: হোয়াট' }, { text: 'Who', sub: 'Conversation', pro: 'উচ্চারণ: হু' },
+                { text: 'Where', sub: 'Conversation', pro: 'উচ্চারণ: হোয়্যার' }, { text: 'When', sub: 'Conversation', pro: 'উচ্চারণ: হেন্ড' },
+                { text: 'Why', sub: 'Conversation', pro: 'উচ্চারণ: হোয়াই' }, { text: 'How', sub: 'Conversation', pro: 'উচ্চারণ: হাউ' },
+                { text: 'Which', sub: 'Conversation', pro: 'উচ্চারণ: হুইচ' }, { text: 'Whose', sub: 'Conversation', pro: 'উচ্চারণ: হুজ' },
+                { text: 'I know', sub: 'Conversation', pro: 'উচ্চারণ: আই নো' }, { text: 'I do not know', sub: 'Conversation', pro: 'উচ্চারণ: আই ডোন্ট নো' },
+                { text: 'I understand', sub: 'Conversation', pro: 'উচ্চারণ: আই আন্ডারস্ট্যান্ড' }, { text: 'I cannot understand', sub: 'Conversation', pro: 'উচ্চারণ: আই কান্ট আন্ডারস্ট্যান্ড' },
+                { text: 'Repeat please', sub: 'Conversation', pro: 'উচ্চারণ: রিপিট প্লিজ' }, { text: 'Speak slowly', sub: 'Conversation', pro: 'উচ্চারণ: স্পিক স্লোলি' },
+                { text: 'Of course', sub: 'Conversation', pro: 'উচ্চারণ: অফ কোর্স' }, { text: 'No problem', sub: 'Conversation', pro: 'উচ্চারণ: নো প্রবলেম' },
+                { text: 'Take care', sub: 'Conversation', pro: 'উচ্চারণ: টেক কেয়ার' }, { text: 'See you', sub: 'Conversation', pro: 'উচ্চারণ: সি ইউ' },
+                { text: 'Have a nice day', sub: 'Conversation', pro: 'উচ্চারণ: হ্যাভ এ নাইস ডে' }, { text: 'Good job', sub: 'Conversation', pro: 'উচ্চারণ: গুড জব' }
+            ]
+        };
+
+        var currentCat = '';
+        var currentIndex = 0;
+        var writeCount = 0;
+        var speakCount = 0;
+
+        function selectCategory(cat) {
+            currentCat = cat;
+            currentIndex = 0;
+            writeCount = 0;
+            speakCount = 0;
+            document.getElementById('menuArea').className = 'hidden';
+            document.getElementById('learningArea').className = 'learning-area';
+            updateView();
+        }
+
+        function updateView() {
+            var items = learningData[currentCat];
+            var item = items[currentIndex];
+
+            document.getElementById('displayItem').innerHTML = item.text;
+            document.getElementById('subDesc').innerHTML = item.sub;
+            document.getElementById('pronunciation').innerHTML = item.pro;
+            document.getElementById('counter').innerHTML = 'আইটেম ' + (currentIndex + 1) + ' / ' + items.length;
+
+            document.getElementById('writeCount').innerHTML = writeCount;
+            document.getElementById('speakCount').innerHTML = speakCount;
+            document.getElementById('userInput').value = '';
+            document.getElementById('statusMsg').innerHTML = '';
+
+            if (writeCount >= 5 && speakCount >= 5) {
+                document.getElementById('nextBtn').disabled = false;
+                document.getElementById('nextBtn').style.background = '#2563eb';
+                document.getElementById('nextBtn').style.color = '#fff';
+            } else {
+                document.getElementById('nextBtn').disabled = true;
+                document.getElementById('nextBtn').style.background = '#e2e8f0';
+                document.getElementById('nextBtn').style.color = '#475569';
+            }
+        }
+
+        function speakWord() {
+            var text = learningData[currentCat][currentIndex].text;
+            var msg = new SpeechSynthesisUtterance(text);
+            msg.lang = 'en-US';
+            window.speechSynthesis.speak(msg);
+            document.getElementById('statusMsg').innerHTML = 'সম্পূর্ণ উচ্চারণ শোনা হচ্ছে...';
+        }
+
+        function spellWord() {
+            var text = learningData[currentCat][currentIndex].text;
+            for (var i = 0; i < text.length; i++) {
+                var msg = new SpeechSynthesisUtterance(text[i]);
+                msg.lang = 'en-US';
+                msg.rate = 0.5;
+                window.speechSynthesis.speak(msg);
+            }
+            document.getElementById('statusMsg').innerHTML = 'বানান করে শোনা হচ্ছে...';
+        }
+
+        function verifyWriting() {
+            var val = document.getElementById('userInput').value.trim();
+            var target = learningData[currentCat][currentIndex].text;
+
+            if (val.toLowerCase() === target.toLowerCase()) {
+                if (writeCount < 5) {
+                    writeCount++;
+                    updateView();
+                    document.getElementById('statusMsg').innerHTML = 'সঠিক লিখেছে! (' + writeCount + '/৫)';
+                }
+            } else {
+                alert('সঠিক শব্দ লিখে যাচাই করুন!');
+            }
+        }
+
+        function verifyVoice() {
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                alert('আপনার ব্রাউজার ভয়েস রিকগনিশন সমর্থন করে না।');
+                return;
+            }
+
+            var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            var recognition = new SpeechRecognition();
+            recognition.lang = 'en-US';
+
+            document.getElementById('statusMsg').innerHTML = 'দয়া করে শব্দটি মুখে বলুন...';
+
+            recognition.onresult = function (event) {
+                var spokenText = event.results[0][0].transcript.trim();
+                var target = learningData[currentCat][currentIndex].text;
+
+                if (spokenText.toLowerCase().includes(target.toLowerCase())) {
+                    if (speakCount < 5) {
+                        speakCount++;
+                        updateView();
+                        document.getElementById('statusMsg').innerHTML = 'সঠিক উচ্চারণ হয়েছে! (' + speakCount + '/৫)';
+                    }
+                } else {
+                    document.getElementById('statusMsg').innerHTML = 'মিলেনি ("' + spokenText + '"), আবার বলুন।';
+                }
+            };
+
+            recognition.start();
+        }
+
+        function nextItem() {
+            var items = learningData[currentCat];
+            if (currentIndex < items.length - 1) {
+                currentIndex++;
+                writeCount = 0;
+                speakCount = 0;
+                updateView();
+            } else {
+                alert('এই ক্যাটাগরির সব শব্দ শেষ!');
+                backToMenu();
+            }
+        }
+
+        function backToMenu() {
+            document.getElementById('menuArea').className = 'category-grid';
+            document.getElementById('learningArea').className = 'learning-area hidden';
+        }
+    </script>
+</body>
+
+</html>
